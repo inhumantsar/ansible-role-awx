@@ -1,0 +1,24 @@
+---
+# tasks file for awx
+- debug: msg="Starting role awx v0.1.0"
+
+- name: remove awx stack
+  shell: "docker stack rm {{awx_stack_name}}"
+  when: awx_remove
+
+- name: make sure mount paths exist
+  file:
+    state: directory
+    path: "{{ awx_postgres_data_hostpath }}"
+
+- name: write template to temp location
+  template:
+    src: templates/docker-compose.yml.j2
+    dest: "/tmp/{{awx_stack_name}}-docker-compose.yml"
+  when: not awx_remove
+
+- name: run docker stack
+  shell: "docker stack deploy -c /tmp/{{awx_stack_name}}-docker-compose.yml {{awx_stack_name}}" 
+  when: not awx_remove
+
+- debug: msg="WARNING! The docker stack command does not return an error if the stack doesn't launch properly."

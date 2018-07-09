@@ -1,0 +1,7 @@
+image: inhumantsar/ansible:docker
+
+test:
+  variables:
+    WORKDIR: "$CI_PROJECT_DIR"
+  script:
+    /start.sh -vvv

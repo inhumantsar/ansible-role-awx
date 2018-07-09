@@ -1,0 +1,132 @@
+version: '3'
+services:
+  postgres:
+    image: "{{awx_postgres_image_name}}:{{awx_postgres_image_tag}}"
+    environment:
+      POSTGRES_USER: {{awx_postgres_user}}
+      POSTGRES_PASSWORD: {{awx_postgres_pass}}
+      POSTGRES_DB: {{awx_postgres_db}}
+    volumes:
+        - {{awx_postgres_data_hostpath}}:/var/lib/postgresql/data
+    networks:
+        - {{awx_network_name}}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+{% if awx_postgres_deploy_labels %}
+    labels:
+{% for key, value in awx_postgres_deploy_labels.items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{%- endif %}
+
+  rabbitmq:
+    image: "{{awx_rabbitmq_image_name}}:{{awx_rabbitmq_image_tag}}"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: {{awx_rabbitmq_vhost}}
+      RABBITMQ_DEFAULT_USER: {{awx_rabbitmq_user}}
+      RABBITMQ_DEFAULT_PASS: {{awx_rabbitmq_pass}}
+    networks:
+        - {{awx_network_name}}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+{% if awx_rabbitmq_deploy_labels %}
+    labels:
+{% for key, value in awx_rabbitmq_deploy_labels.items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{%- endif %}
+
+  memcached:
+    image: "{{awx_memcached_image_name}}:{{awx_memcached_image_tag}}"
+    networks:
+        - {{awx_network_name}}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+{% if awx_memcached_deploy_labels %}
+    labels:
+{% for key, value in awx_memcached_deploy_labels.items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{%- endif %}
+
+  awx_web:
+    image: "{{awx_web_image_name}}:{{awx_web_image_tag}}"
+    hostname: awx_web
+    user: root
+    environment:
+      SECRET_KEY: {{awx_secret_key}}
+      DATABASE_USER: {{awx_postgres_user}}
+      DATABASE_PASSWORD: {{awx_postgres_pass}}
+      DATABASE_NAME: {{awx_postgres_db}}
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      RABBITMQ_USER: {{awx_rabbitmq_user}}
+      RABBITMQ_PASSWORD: {{awx_rabbitmq_pass}}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: {{awx_rabbitmq_vhost}}
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+    networks:
+        - {{awx_network_name}}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+{% if awx_web_deploy_labels %}
+    labels:
+{% for key, value in awx_web_deploy_labels.items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{%- endif %}
+
+  awx_task:
+    image: "{{awx_task_image_name}}:{{awx_task_image_tag}}"
+    hostname: awx
+    user: root
+    environment:
+      SECRET_KEY: {{awx_secret_key}}
+      DATABASE_USER: {{awx_postgres_user}}
+      DATABASE_PASSWORD: {{awx_postgres_pass}}
+      DATABASE_NAME: {{awx_postgres_db}}
+      DATABASE_PORT: 5432
+      DATABASE_HOST: postgres
+      RABBITMQ_USER: {{awx_rabbitmq_user}}
+      RABBITMQ_PASSWORD: {{awx_rabbitmq_pass}}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: {{awx_rabbitmq_vhost}}
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+    networks:
+        - {{awx_network_name}}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+{% if awx_task_deploy_labels %}
+    labels:
+{% for key, value in awx_task_deploy_labels.items() %}
+      {{ key }}: {{ value }}
+{% endfor %}
+{%- endif %}
+
+networks:
+  {{awx_network_name}}:
+    driver: overlay
+{% for net in awx_networks %}
+  {{ net }}:
+    external: true
+
+{% endfor %}
