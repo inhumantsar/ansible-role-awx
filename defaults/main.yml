@@ -23,19 +23,23 @@ awx_networks: []            # additional networks
 
 awx_web_image_name: "ansible/awx_web"
 awx_web_image_tag: "latest"
+awx_web_env_vars: {}
 awx_web_deploy_labels: ~
 
 awx_task_image_name: "ansible/awx_task"
 awx_task_image_tag: "latest"
+awx_task_env_vars: {}
 awx_task_deploy_labels: ~
 
 awx_postgres_image_name: postgres
 awx_postgres_image_tag: "9.6"
+awx_postgres_env_vars: {}
 awx_postgres_deploy_labels: ~
 awx_postgres_data_hostpath: /opt/awx/postgresql/data
 
 awx_rabbitmq_image_name: rabbitmq
 awx_rabbitmq_image_tag: "3"
+awx_rabbitmq_env_vars: {}
 awx_rabbitmq_deploy_labels: ~
 
 awx_memcached_image_name: memcached
