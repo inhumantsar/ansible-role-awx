@@ -1,7 +1,7 @@
 galaxy_info:
   author: Shaun Martin
   description: Launches AWX on Docker Swarm
-  company:  
+  role_name: awx
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
