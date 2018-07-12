@@ -1,6 +1,6 @@
 ---
 # tasks file for awx
-- debug: msg="Starting role awx v0.2.0"
+- debug: msg="Starting role awx v0.2.1"
 
 - name: remove awx stack
   shell: "docker stack rm {{awx_stack_name}}"
