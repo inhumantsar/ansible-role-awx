@@ -87,6 +87,9 @@ services:
 {% endfor %}
     networks:
         - {{awx_network_name}}
+{% for net in awx_networks %}
+        - {{ net }}
+{% endfor %}
     deploy:
       mode: replicated
       replicas: 1
