@@ -32,6 +32,7 @@ The defaults are fine if you're just trying things out. When moving into product
 * `awx_secret_key`
 * `awx_postgres_user` & `awx_postgres_pass`
 * `awx_rabbitmq_user` & `awx_rabbitmq_pass`
+* `awx_settings_hostpath` & `awx_postgres_data_hostpath`
 
 If you're using an automatic proxy like [`jwilder/nginx-proxy`](https://github.com/jwilder/nginx-proxy) then you will also want to change `awx_web_deploy_labels`.
 
