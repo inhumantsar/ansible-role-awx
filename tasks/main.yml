@@ -6,14 +6,13 @@
   shell: "docker stack rm {{awx_stack_name}}"
   when: awx_remove
 
-- name: make sure mount paths exist
+- name: make sure postgres data path exists
   file:
     state: directory
-    path: "{{ item }}"
-  when: item is not none
-  with_items:
-    - "{{ awx_postgres_data_hostpath }}"
-    - "{{ awx_settings_hostpath }}"
+    path: "{{ awx_postgres_data_hostpath }}"
+  when: 
+    - awx_postgres_data_hostpath is not none
+    - not awx_remove
 
 - name: write template to temp location
   template:
