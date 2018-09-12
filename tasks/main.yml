@@ -1,6 +1,6 @@
 ---
 # tasks file for awx
-- debug: msg="Starting role awx v0.2.1"
+- debug: msg="Starting role awx v0.3.0"
 
 - name: remove awx stack
   shell: "docker stack rm {{awx_stack_name}}"
@@ -9,7 +9,11 @@
 - name: make sure mount paths exist
   file:
     state: directory
-    path: "{{ awx_postgres_data_hostpath }}"
+    path: "{{ item }}"
+  when: item is not none
+  with_items:
+    - "{{ awx_postgres_data_hostpath }}"
+    - "{{ awx_settings_hostpath }}"
 
 - name: write template to temp location
   template:

@@ -9,8 +9,10 @@ services:
 {% for key, value in awx_postgres_env_vars.items() %}
       {{ key }}: {{ value }}
 {% endfor %}
+{% if awx_postgres_data_hostpath is not none %}
     volumes:
         - {{awx_postgres_data_hostpath}}:/var/lib/postgresql/data
+{% endif %}
     networks:
         - {{awx_network_name}}
     deploy:
@@ -90,6 +92,10 @@ services:
 {% for net in awx_networks %}
         - {{ net }}
 {% endfor %}
+{% if awx_settings_hostpath is not none %}
+    volumes:
+        - {{awx_settings_hostpath}}:/etc/tower/settings.py
+{% endif %}
     deploy:
       mode: replicated
       replicas: 1
@@ -125,6 +131,10 @@ services:
 {% endfor %}
     networks:
         - {{awx_network_name}}
+{% if awx_settings_hostpath is not none %}
+    volumes:
+        - {{awx_settings_hostpath}}:/etc/tower/settings.py
+{% endif %}
     deploy:
       mode: replicated
       replicas: 1

@@ -1,7 +1,7 @@
 ---
 # awx settings
 awx_secret_key: somebiglongsecretkey
-
+awx_settings_hostpath: ~    # eg: /opt/awx/settings.py
 
 # postgres setings
 awx_postgres_user: awx
@@ -35,7 +35,7 @@ awx_postgres_image_name: postgres
 awx_postgres_image_tag: "9.6"
 awx_postgres_env_vars: {}
 awx_postgres_deploy_labels: ~
-awx_postgres_data_hostpath: /opt/awx/postgresql/data
+awx_postgres_data_hostpath: ~   # /opt/awx/postgresql/data
 
 awx_rabbitmq_image_name: rabbitmq
 awx_rabbitmq_image_tag: "3"
